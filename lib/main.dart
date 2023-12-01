@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:getflutter/get/counter.dart';
+import 'package:getflutter/provider/pizza.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,14 +15,96 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => PizzaProvider(pizza: 4))
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: const PizzaCounter(),
       ),
-      home: const MyHomePage(),
     );
+  }
+}
+
+class PizzaCounter extends StatefulWidget {
+  const PizzaCounter({super.key});
+
+  @override
+  State<PizzaCounter> createState() => _PizzaCounterState();
+}
+
+class _PizzaCounterState extends State<PizzaCounter> {
+  @override
+  Widget build(BuildContext context) {
+    int noOfPizza = Provider.of<PizzaProvider>(context).pizza;
+
+    return Scaffold(
+        appBar: AppBar(title: const Text("Pizza Counter")),
+        body: Center(
+            child: Column(children: [
+          Text(
+            "🍕 : $noOfPizza",
+            style: const TextStyle(fontSize: 50),
+          ),
+          ElevatedButton(
+              onPressed: () {
+                Provider.of<PizzaProvider>(context, listen: false)
+                    .changeNoOfPizza();
+              },
+              child: const Text(
+                "+",
+                style: TextStyle(fontSize: 50),
+              )),
+          ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const PizzaScreenTwo()));
+              },
+              child: const Text(
+                "Go to Screen 2",
+                style: TextStyle(fontSize: 50),
+              ))
+        ])));
+  }
+}
+
+class PizzaScreenTwo extends StatefulWidget {
+  const PizzaScreenTwo({super.key});
+
+  @override
+  State<PizzaScreenTwo> createState() => _PizzaScreenTwoState();
+}
+
+class _PizzaScreenTwoState extends State<PizzaScreenTwo> {
+  @override
+  Widget build(BuildContext context) {
+    int noOfPizza = Provider.of<PizzaProvider>(context).pizza;
+
+    return Scaffold(
+        appBar: AppBar(title: const Text("Pizza Screen Two")),
+        body: Center(
+            child: Column(children: [
+          Text(
+            "Pizza : $noOfPizza",
+            style: const TextStyle(fontSize: 50),
+          ),
+          ElevatedButton(
+              onPressed: () {
+                Provider.of<PizzaProvider>(context, listen: false)
+                    .changeNoOfPizza();
+              },
+              child: const Text(
+                "+",
+                style: TextStyle(fontSize: 50),
+              )),
+        ])));
   }
 }
 
