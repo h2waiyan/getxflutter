@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'package:getflutter/get/counter.dart';
 
 void main() {
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -57,8 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
               )),
           ElevatedButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ScreenTwo()));
+                Get.to(const ScreenTwo());
               },
               child: const Text(
                 "Go to Screen 2",
@@ -90,6 +90,15 @@ class _ScreenTwoState extends State<ScreenTwo> {
               style: const TextStyle(fontSize: 50),
             ),
           ),
+          Obx(
+            () {
+              var sq = counter.count.value * counter.count.value;
+              return Text(
+                "Square : ${sq}",
+                style: const TextStyle(fontSize: 50),
+              );
+            },
+          ),
           ElevatedButton(
               onPressed: () {
                 setState(() {
@@ -101,9 +110,16 @@ class _ScreenTwoState extends State<ScreenTwo> {
                 style: TextStyle(fontSize: 50),
               )),
           ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Get.snackbar("Hi", "This is a snackbar");
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //   const SnackBar(
+                //     content: Text('This is a snackbar'),
+                //   ),
+                // );
+              },
               child: const Text(
-                "Go to Screen 2",
+                "Show SnackBar",
                 style: TextStyle(fontSize: 50),
               ))
         ])));
